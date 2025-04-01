@@ -1,0 +1,30 @@
+version: "3.4"
+services:
+  pg_tileserv:
+    image: "pramsey/pg_tileserv:latest"
+    ports:
+    - 8801:7800
+    environment:
+    - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+    # volumes:
+    # - ./pg_tileserv.toml:/etc/pg_tileserv.toml
+    restart: always
+  pg_featureserv:
+    image: "pramsey/pg_featureserv:latest"
+    ports:
+    - 9000:9000
+    environment:
+    # CHANGE connection string from .env file
+    - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+    restart: always
+  server-web:
+    image: nginx
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/usr/share/nginx/html
+      - ../Laboratoires/Lab 9/:/usr/share/nginx/html/lab9
+      - ../Laboratoires/Lab 11/:/usr/share/nginx/html/modules/lab11
+      - ../Exam/Exam2/:/usr/share/nginx/html/exam2
+    restart: always
+  

@@ -1,0 +1,16 @@
+version: "3.4"
+services:
+  pg_tileserv:
+    image: "pramsey/pg_tileserv:latest"
+    ports:
+    - 8801:7800
+    environment:
+    - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+    restart: always
+  server-web:
+    image: nginx
+    ports:
+      - 8000:80
+    volumes:
+      - ./app:/usr/share/nginx/html
+    restart: always
