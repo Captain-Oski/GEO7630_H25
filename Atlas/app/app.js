@@ -9,27 +9,33 @@ var map = new maplibregl.Map({
 
 function loadTeam(teamName) {
     // Vider toutes les divs
-    document.getElementById('Equipe1').innerHTML = '';
-    document.getElementById('Equipe2').innerHTML = '';
-    document.getElementById('Equipe3').innerHTML = '';
-    document.getElementById('Equipe4').innerHTML = '';
-    document.getElementById('Equipe5').innerHTML = '';
-    // Charger le contenu de l'équipe sélectionnée
-
-    const path = teamName === 'Accueil' 
-    ? './index.html' 
-    : `./equipes/${teamName}/index.html`;
-
+    ['Equipe1', 'Equipe2', 'Equipe3', 'Equipe4', 'Equipe5'].forEach(id => {
+      document.getElementById(id).innerHTML = '';
+    });
+  
+    const path = teamName === 'Accueil'
+      ? './index.html'
+      : `./equipes/${teamName}/index.html`;
+  
     fetch(path)
-        .then(response => {
+      .then(response => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.text();
-        })
-        .then(data => {
+      })
+      .then(data => {
         document.getElementById(teamName).innerHTML = data;
-        })
-        .catch(error => {
-        console.error('There was a problem with fetching the team content:', error);
-        });
-
-    }
+  
+        // Charger le JS uniquement si le fichier existe (ex: pour Équipe1 seulement)
+        if (teamName === 'Equipe1') {
+          const script = document.createElement('script');
+          script.src = `./equipes/${teamName}/app.js`;
+          script.type = 'text/javascript';
+          script.defer = true;
+          document.body.appendChild(script);
+        }
+      })
+      .catch(error => {
+        console.error('Erreur lors du chargement :', error);
+      });
+  }
+  
