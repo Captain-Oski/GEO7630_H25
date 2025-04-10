@@ -84,23 +84,27 @@ canvas {
 /* ============================================
    Légende choroplèthe (exemple)
    ============================================ */
-#legendChoropleth {
+   #legendChoropleth {
     position: absolute;
     bottom: 10px;
     left: 10px;
     display: flex;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 5px;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
-.legend-item {
-    padding: 5px 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     font-size: 12px;
-    text-align: center;
+  }
+  
+  .legend-item {
+    padding: 4px 8px;
     color: black;
-}
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+  }
+  
 
 
 
@@ -117,5 +121,56 @@ canvas {
   }
   #arrondissementBtn button:hover {
     background-color: #f0f0f0;
+  }
+  
+
+
+
+  /* ============================================
+   Choisir une variable
+   ============================================ */
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  
+  .dropbtn {
+    background-color: #fff;
+    color: #333;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 6px;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 240px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
   }
   
