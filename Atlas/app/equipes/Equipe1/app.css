@@ -1,0 +1,121 @@
+/* ============================================
+   Styles de base pour toute la page
+   ============================================ */
+   html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* ============================================
+   Conteneur principal contenant la carte + panneau
+   ============================================ */
+#mainContainer {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ============================================
+   Zone de la carte
+   ============================================ */
+#map {
+    flex: 1;
+}
+
+/* ============================================
+   (Obsolète ici, remplacé par Split.js)
+   Séparateur entre carte et panneau
+   ============================================ */
+#splitter {
+    width: 5px;
+    background-color: #ccc;
+    cursor: ew-resize;
+}
+
+/* ============================================
+   Panneau d'information à droite
+   ============================================ */
+#infoPanel {
+    width: 400px;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+/* ============================================
+   En-tête du panneau
+   ============================================ */
+.panel-header {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   Corps du panneau
+   ============================================ */
+.panel-body {
+    font-size: 0.95rem;
+}
+
+/* ============================================
+   Style de l’histogramme Chart.js
+   ============================================ */
+canvas {
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   Configuration Split.js
+   ============================================ */
+.split {
+    overflow: auto;
+}
+.gutter {
+    background-color: #ccc;
+    cursor: col-resize;
+}
+.gutter.gutter-horizontal {
+    width: 5px;
+}
+
+/* ============================================
+   Légende choroplèthe (exemple)
+   ============================================ */
+#legendChoropleth {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.legend-item {
+    padding: 5px 8px;
+    font-size: 12px;
+    text-align: center;
+    color: black;
+}
+
+
+
+
+/* ============================================
+   Style du bouton de l'arrondissement 
+   ============================================ */
+#arrondissementBtn button {
+    background-color: white;
+    border: none;
+    padding: 5px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  #arrondissementBtn button:hover {
+    background-color: #f0f0f0;
+  }
+  
