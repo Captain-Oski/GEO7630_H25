@@ -1,143 +1,94 @@
-# 📚 GEO 7630 - Semaine 12 : Webmapping avancé et mise en production
+# 📚 GEO 7630 - Semaine 13 : Mise en production & 3D Tiles
 
 ## 🗓️ Date
-- **1 avril 2025**
+- **9 avril 2025**
 
 ## 🎯 Objectifs du cours 13
-1. Comprendre les **principes d’architecture applicative** pour le webmapping.
-2. Effectuer des **analyses spatiales avancées** dans une application web.
-3. Développer et optimiser des composants interactifs avancés avec MapLibre GL.
-4. Mettre en production une application de **webmapping**.
+1. Comprendre les **principes de mise en production** d’une application de webmapping.
+2. Explorer les **bonnes pratiques de diffusion et d’assurance qualité** pour le développement applicatif.
+3. Introduire les concepts de **contribution open source**.
+4. Se familiariser avec les **formats 3D Tiles** pour la visualisation 3D web.
+5. Se préparer à l’**examen final**.
 
 ---
 
 ## 📋 Contenu du cours
 
-### **1. Concepts avancés d’architecture applicative**
-- **Architecture applicative moderne** :
-  - Utilisation de **Docker** pour le déploiement.
-  - Orchestration des services backend et frontend.
-- **Principes clés** :
-  - Séparation des couches **frontend** et **backend**.
-  - Automatisation du déploiement via des conteneurs.
+### **1. Mise en production d’une application de webmapping**
+- **Cycles de développement** :
+  - Modèle en cascade vs méthode agile.
+  - Itérations, feedbacks, tests continus.
+- **Cycle de vie applicatif** :
+  - Conception → Développement → Déploiement → Maintenance → Retrait.
+- **Bonnes pratiques de diffusion** :
+  - Déploiement progressif, parallèle ou par lots.
+  - Tests d’intégration, de charge et de non-régression.
+  - Monitoring avec outils comme Grafana.
 
-#### **Technologies utilisées**
-- **Backend** : PostgreSQL/PostGIS, pg_tileserv, pg_featureserv.
-- **Frontend** : MapLibre GL, TurfJS.
-- **Outils de conteneurisation** : Docker, Docker-Compose.
-
----
-
-### **2. Analyse spatiale dans le web**
-#### **Principales opérations d’analyse spatiale**
-- **Distance** : Calcul de distance entre deux points avec la formule de Haversine.
-- **Buffer** : Création de zones tampon autour des entités.
-- **Intersect/Dissolve** : Intersection et fusion de géométries.
-- **Grids et Interpolation** : Création de maillages et visualisation des données spatiales.
-
-#### **Librairies utilisées**
-- **TurfJS** : Outils d’analyse spatiale pour les applications web.
-- **MapLibre GL** : Intégration interactive des analyses dans des cartes web.
-
-#### **Exemples de code**
-- **Calculer un buffer avec TurfJS** :
-  ```javascript
-  const buffer = turf.buffer(geojson, 500, { units: 'meters' });
-  map.addSource('buffer-layer', {
-    type: 'geojson',
-    data: buffer
-  });
-  map.addLayer({
-    id: 'buffer-layer',
-    type: 'fill',
-    source: 'buffer-layer',
-    paint: {
-      'fill-color': '#00f',
-      'fill-opacity': 0.5
-    }
-  });
-  ```
-- **Calcul de distance** :
-  ```javascript
-  const distance = turf.distance(point1, point2, { units: 'kilometers' });
-  console.log(`Distance : ${distance} km`);
-  ```
+#### **Assurance qualité et open source**
+- **Revue de code** et respect des normes (accessibilité, sécurité).
+- **Contribution open source** :
+  - Utilisation de forks, pull requests, licences (MIT, GPL…).
+  - Participation communautaire (doc, tests, support).
 
 ---
 
-### **3. Atelier : Webmapping avancé**
-1. **Interactions avancées avec MapLibre GL** :
-   - **Change building color based on zoom level**.
-   - **Create a heatmap layer** pour des données continues.
-   - **Clusters dynamiques** avec requêtes interactives.
-2. **Affichage en 3D** :
-   - **Bâtiments 3D** avec des styles dynamiques.
-   - **Intégration de tuiles LiDAR** avec Itowns.
-3. **Outils supplémentaires** :
-   - **Gestion interactive** : `queryRenderedFeatures`, `map.on('click')`.
-   - **Légendes** avec des bibliothèques comme watergis/mapbox-gl-legend.
-
----
-
-### **4. Mise en production d’une application de webmapping**
-#### **Bonnes pratiques**
-- **Cycle de développement** :
-  - Développement → Test → Déploiement.
-- **Assurance qualité** :
-  - Debugging et monitoring des requêtes réseau.
-  - Validation des erreurs dans le code **JavaScript**.
-- **Publication et versionnement** :
-  - Utilisation de **Git** pour le versionnement du code source.
-  - Déploiement dans un environnement **Nginx** conteneurisé.
-
-#### **Exemple de configuration Docker**
-```yaml
-version: "3.4"
-services:
-  server-web:
-    image: nginx
-    ports:
-      - "8000:80"
-    volumes:
-      - ./:/usr/share/nginx/html
-```
+### **2. Visualisation 3D avec 3D Tiles**
+#### **Technologies explorées**
+- **3D Tiles & glTF** :
+  - Format de tuiles optimisé pour la visualisation 3D web.
+  - Utilisation dans la planification urbaine, modélisation de terrain, circulation, etc.
+- **Photorealistic 3D Tiles (PR3DT)** :
+  - Intégration de textures réalistes pour un rendu immersif.
+- **Itowns** :
+  - Plateforme open source (INRIA) basée sur WebGL, Three.js, OpenLayers.
+  - Support de CityGML, GeoJSON, LiDAR…
+- **Three.js** :
+  - Librairie JS pour la visualisation 3D interactive.
+- **Exemples** :
+  - Sea level rise map : [🔗 démo](https://nagix.github.io/sea-level-rise-3d-map/#/-74.0026669/40.7086314/15.89/-81.52/60)
+  - Deck.gl avec 3D Tiles : [🔗 Google Examples](https://developers.google.com/maps/documentation/tile/3d-tiles)
 
 ---
 
 ## 🧪 Laboratoire
-### **Thème : Développement et mise en production d’une application avancée**
-1. **Créer des analyses spatiales** interactives :
-   - Ajout de buffers, intersections et distances avec TurfJS.
-2. **Développement avancé de la carte** :
-   - Intégrer des couches vectorielles et tuiles 3D.
-   - Appliquer des styles dynamiques en fonction du zoom.
-3. **Mise en production** :
-   - Déployer l’application sur un serveur local avec **Nginx** et **Docker**.
-   - Tester les performances et corriger les éventuels bugs.
+### **Thème : Mise en production & 3D Tiles**
+1. **Manipuler et intégrer des 3D Tiles** :
+   - Visualisation avec Itowns, intégration dans un viewer personnalisé.
+2. **Bonnes pratiques DevOps** :
+   - Publier une application cartographique sur GitHub.
+   - Gérer les forks, commits, pull requests.
+3. **Publication web** :
+   - Configuration DNS, nom de domaine, hébergement statique.
+   - Utilisation de GitHub Pages et NGINX conteneurisé.
 
 ---
 
 ## 📂 Ressources et liens utiles
-- **MapLibre GL** : [Documentation officielle](https://maplibre.org/maplibre-gl-js-docs/)
-- **TurfJS** : [Documentation TurfJS](https://turfjs.org/)
-- **Itowns** : [Itowns Docs](https://www.itowns-project.org/)
-- **Docker** : [Docker Documentation](https://docs.docker.com/)
-- **Bootstrap** : [Introduction Bootstrap](https://getbootstrap.com/)
+- **Itowns** : [Documentation](https://www.itowns-project.org/)
+- **Cesium - 3D Tiles Next** : [Article](https://cesium.com/blog/2021/11/10/introducing-3d-tiles-next/)
+- **glTF** : [Khronos glTF](https://www.khronos.org/gltf/)
+- **Three.js** : [Documentation officielle](https://threejs.org/)
+- **Deck.gl 3D Tiles** : [Google Example](https://developers.google.com/maps/documentation/tile/3d-tiles)
+- **Docker** : [Documentation Docker](https://docs.docker.com/)
+- **Grafana** : [Grafana Playground](https://play.grafana.org/d/000000012/grafana-play-home?orgId=1)
 
 ---
 
 ## 📝 Devoir
-- **Travail pratique 6 (TP6)** : Mise en production d’une application webmapping intégrant des analyses spatiales.
-- **Livrables** :
-  - Application fonctionnelle avec des interactions avancées.
-  - Fichiers **Docker-Compose** pour déploiement.
-- **Date de remise** : **8 avril 2025**.
+- **Préparation finale TP3** : Finaliser la mise en production de votre application de webmapping.
+- **Travail à effectuer** :
+  - Intégrer des **composants 3D** (Itowns, Tiles).
+  - **Publier** l’application via **GitHub** et soumettre une **pull request**.
+- **Date de remise TP3** : **16 avril 2025**.
 
 ---
 
 ## ❓ Questions et échanges
-- Retour sur les défis liés aux analyses spatiales et à la mise en production.
-- Discussion sur les bonnes pratiques pour optimiser une application de webmapping.
+- Revue des choix d’architecture et des défis rencontrés.
+- Retour sur les étapes de diffusion et publication web.
+- Discussion ouverte en vue de l’**examen final**.
 
+---
 
-**🚀 À la semaine prochaine pour le cours 14 !**
+**🚀 À la semaine prochaine pour le cours 14 et l'examen final !**

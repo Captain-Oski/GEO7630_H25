@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Deck.gl + Google 3D Tiles + PBF Layer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; }
+    #map { width: 100%; height: 100%; }
+    #credits {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      color: white;
+      font-size: 10px;
+      background: rgba(0,0,0,0.4);
+      padding: 4px 8px;
+      z-index: 1000;
+    }
+  </style>
+
+  <!-- DeckGL + GeoLayers -->
+  <script src="https://cdn.jsdelivr.net/npm/deck.gl@9.1.8/dist.min.js"></script>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="credits"></div>
+
+  <script>
+    const GOOGLE_API_KEY = 'AIzaSyDLeVgNQmcuF-uCbr9UfZE6MkYsA95BZ2g';
+    const TILESET_URL = 'https://tile.googleapis.com/v1/3dtiles/root.json';
+    const INITIAL_VIEW_STATE = {
+      latitude: 45.559,
+      longitude: -73.55,
+      zoom: 16,
+      bearing: 90,
+      pitch: 60,
+    };
+
+    const MVTLayer = deck.MVTLayer;
+    const Tile3DLayer = deck.Tile3DLayer;
+
+    let credits = '';
+
+    const customColorScale = (value) => {
+      if (value >= 50) return [73, 0, 73];
+      if (value >= 30) return [122, 1, 119];
+      if (value >= 20) return [197, 27, 138];
+      if (value >= 10) return [247, 104, 161];
+      if (value >= 0) return [251, 180, 185];
+      return [254, 235, 226];
+    };
+
+    const deckgl = new deck.DeckGL({
+      container: 'map',
+      initialViewState: INITIAL_VIEW_STATE,
+      controller: true,
+      onLoad: () => console.log("DeckGL loaded"),
+      layers: [
+        new Tile3DLayer({
+          id: 'google-3d-tiles',
+          data: `${TILESET_URL}?key=${GOOGLE_API_KEY}`,
+          onTilesetLoad: tileset3d => {
+            tileset3d.options.onTraversalComplete = selectedTiles => {
+              const uniqueCredits = new Set();
+              selectedTiles.forEach(tile => {
+                const c = tile.content?.gltf?.asset?.copyright;
+                if (c) c.split(';').forEach(str => uniqueCredits.add(str.trim()));
+              });
+              credits = [...uniqueCredits].join('; ');
+              document.getElementById('credits').innerText = credits;
+              return selectedTiles;
+            };
+          },
+          operation: 'terrain+draw'
+        }),
+
+        new MVTLayer({
+          id: 'occupCom-pbf',
+          data: 'https://special-train-gv4r9g5gj4cvp7-8801.app.github.dev/public.densite_arbres_quartiers/{z}/{x}/{y}.pbf',
+          minZoom: 12,
+          maxZoom: 22,
+          getFillColor: d => customColorScale(d.properties.qt_arbres),
+          lineWidthMinPixels: 0.5,
+          opacity: 0.4,
+          autoHighlight: true,
+          extensions: [
+            new deck.DataFilterExtension({ filterSize: 1 }),
+            new deck._TerrainExtension()
+          ],
+          getFilterValue: f => f.properties.qt_arbres,
+          filterRange: [0, 500]
+        })
+      ]
+    });
+  </script>
+</body>
+</html>

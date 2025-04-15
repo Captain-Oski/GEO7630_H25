@@ -6,8 +6,6 @@ services:
     - 8801:7800
     environment:
     - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
-    # volumes:
-    # - ./pg_tileserv.toml:/etc/pg_tileserv.toml
     restart: always
   pg_featureserv:
     image: "pramsey/pg_featureserv:latest"
@@ -20,11 +18,21 @@ services:
   server-web:
     image: nginx
     ports:
-      - 8000:80
+      - 80:80
     volumes:
-      - ./app/:/usr/share/nginx/html
-      - ../Laboratoires/Lab 9/:/usr/share/nginx/html/lab9
-      - ../Laboratoires/Lab 11/:/usr/share/nginx/html/modules/lab11
-      - ../Exam/Exam2/:/usr/share/nginx/html/exam2
+      - ./app:/usr/share/nginx/html
+    restart: always
+  geoserver:
+    image: kartoza/geoserver:2.22.2
+    ports:
+      - 8080:8080
+    environment:
+      - GEOSERVER_ADMIN_USER=admin
+      - GEOSERVER_ADMIN_PASSWORD=geoserver
+      - GEOSERVER_DATA_DIR=/opt/geoserver/data_dir
+      - GEOSERVER_CONTEXT_PATH=/geoserver
+      - PROXY_BASE_URL=https://special-train-gv4r9g5gj4cvp7-8080.app.github.dev/geoserver
+    volumes:
+      - ./geoserver_data:/opt/geoserver/data_dir
     restart: always
   

@@ -1,250 +1,289 @@
-Laboratoire cours 9 - GEO7630H24
+# Laboratoire 10 - GEO7630H25
+## Configuration Geoserver et mise en place de services VTS et WFS
 
-[**Prérequis ****2**](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.84ywk8x2lpn)
+### **Étape 1 : Configuration et lancement d’une instance de Geoserver**
 
-[Étape 0 2](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.1ysr0hl64b3a)
+1. Ouvrez GitHub et assurez-vous d’être connecté
+2. Lancez un Codespace à partir de votre fork du dépot github du cours (sur la branche main le codespace).
+3. Cela démarre un environnement virtuel où vous pourrez modifier et tester du code, ainsi que démarrer des services cartographiques.
 
-[Étape 1 4](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.8lfo0mp7i53o)
+![alt text](images/image.png)
 
-[**Laboratoire ****5**](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.imw3v927sqgu)
+![alt text](images/image-1.png)
+---
 
-[Étape 1 5](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.npwm13voq286)
+### **Étape 2 : Configuration de l’environnement**
 
-[Étape 2 5](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.jk6sgtz1zot0)
+1. Copiez-collez le fichier **.env.example** situé dans le dossier **Atlas** (dans le même dossier).
+2. Renommez le fichier en **.env** (supprimez le **.example**).
+3. Modifiez les variables d’environnement avec vos informations personnelles :
 
-[Étape 3 6](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.32vuq7czks03)
+   ```plaintext
+   DB_USER=CODEPERMANENT
+   DB_PASSWORD=VOTREMOTDEPASSE
+   DB_HOST=geo7630h25.cvwywmuc8u6v.us-east-1.rds.amazonaws.com
+   DB_NAME=geo7630
+   ```
 
-[Étape 4 6](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.dx33x6dfqj2z)
+4. Dans le dossier **Atlas**, faites un clic droit sur le fichier **docker-compose.yml** et sélectionnez **Compose Up**.
 
-[Étape 5 7](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.nivl4u1i8ow8)
+![alt text](images/image-2.png)
 
-[Étape 7 7](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.tlc2v28btyxv)
+5. Si l’option **Compose Up** n’apparaît pas, installez l’extension **Docker**. (Ctrl+shift+x cherchez Docker)
 
-[Étape 8 7](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.dsh97b2avazu)
+![alt text](images/image-3.png)
 
-[Étape 9 8](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.kvd5ufdcp8ur)
+6. Vérifiez que les conteneurs s’exécutent correctement en consultant l’icône de la baleine Docker.
 
-[Étape 10 9](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.bkl0bhyqv8qo)
+![alt text](images/image-4.png)
 
-[Étape 11 9](https://docs.google.com/document/d/1k8meOZcHu413wrUnj25UDK03XKgHnFLuqatYnZ6-Aqs/edit#heading=h.udgtnytx19eb)
+7. Ouvrez un terminal (**CTRL+J**) et testez l’application en accédant à son interface web.
 
+---
 
-#
+### **Étape 3 : Ajout de contrôles de carte**
 
-# Prérequis
+Dans le fichier **/Atlas/app/app.js**, ajoutez les contrôles suivants :
 
-Ouvrez l’application Visual Studio
+- **Contrôle de navigation** :
+  ```javascript
+  var nav = new maplibregl.NavigationControl({
+      showCompass: true,
+      showZoom: true,
+      visualizePitch: true
+  });
+  map.addControl(nav, 'top-right');
+  ```
+- **Contrôle de géolocalisation** :
+  ```javascript
+  var geolocateControl = new maplibregl.GeolocateControl({
+      positionOptions: { enableHighAccuracy: true },
+      trackUserLocation: true
+  });
+  map.addControl(geolocateControl, 'bottom-right');
+  ```
+- **Contrôle d’échelle** :
+  ```javascript
+  var scale = new maplibregl.ScaleControl({ unit: 'metric' });
+  map.addControl(scale);
+  ```
+Rechargez la page pour voir les contrôleurs s’afficher.
 
-Assurez-vous d’avoir préalablement connecté votre compte github à visual studio
+![alt text](images/image-5.png)
 
-Ensuite Cloner le “repo” <https://github.com/Captain-Oski/GEO7630_H24>
+Voici tous les différents Markers and Controls pour votre carte 
 
-![](https://lh7-us.googleusercontent.com/PYRPe2tIlYOvf3ziRfm_CMjs-6JYXctNVNB7MiOg4T-NpUrhOuRvGb9hqxe3n6GbBsbaC1Tpq6pU8HlXwxLJaQ6dQ10g2VKNvL3ZPtgHbbHQL76L0PnT8EdgULix-fp2r_kdYmP-jsfwg5PCYJ8ZZRQ)
+https://maplibre.org/maplibre-gl-js/docs/API/#markers-and-controls
 
 
-## Étape 0 
+---
 
-Créer votre propre branche du labo
+### **Étape 4 : Chargement de données depuis un serveur de tuiles vectorielles**
 
-![](https://lh7-us.googleusercontent.com/U3Xi6m6MzAQxr1xdZW_cd6sZD853fKiM21f8twL_7WUS3eqqDlF1hRJ5hoQKkxjkevWo4-DqBbdz7llUxOg1EBEYzuBFLCIdMQ0-dPuCVI8a6j2KyXe9GFal246IexTGSeZesKywfpObxJBqinOkXbA)
+#### 1. 
 
-![](https://lh7-us.googleusercontent.com/WFjlNLaqtAAQEZ_K9a14LNT0SM4Az2J_Pifk5EAuDM_-qgEjXZK4u0P0dMq8ZFxCWJkkB_HsTFLcryNEqEBOEkY5eESTQyY4eFxVzjU4ZmszgzGih09vqNCgaLhywSwwYCKwE-v_Wrag4dI8RIkX66A)
 
+Une source de tuiles vectorielles est définie par une URL qui suit le schéma {z}/{x}/{y}.pbf, où :
+- z représente le niveau de zoom
+- x et y représentent les coordonnées de la tuile
+- ! Attention la source doit être déclarée avant d’ajouter une couche qui l’utilise.
+
+#### 1. Accédez à l’interface d’administration du serveur de tuiles (par exemple pg_tileserv).
+#### 2. Recherchez le service de tuiles vectorielles correspondant à votre couche.
+1. Cliquez sur JSON
+![alt text](image.png)
+2. Repérez l'url en bas et n'oubliez pas de changer le début de l'adresse du serveur pour votre adresse e.g : `special-train-gv4r9g5gj4cvp7`
+![alt text](image-1.png)
 
-## Étape 1
+#### 3. Copiez l’URL du service et remplacez-la dans le script.
 
-Dans le répertoire ou se trouve le dossier du laboratoire 9 ouvrez le fichier HTML pour vérifier que l’application charge correctement.
+#### 4. Utilisation du source-layer
 
-\
-![](https://lh7-us.googleusercontent.com/Y8RU4F-u1f4Aj1iYA6rPscQ_bsc0bSjkxVMBzDcrF_IMCctKY5l7iKzUvkocTrZJ0eQQf46FCPl531GlgnuJkpauvCHPNOXsJxKVObFd6pN5LHkj7Di4b76Vx1x7bB_NETQy0Q3Xxrdl9LiiA-IRMMY)
+Le source-layer correspond au nom de la couche à afficher à partir du service de tuiles.
+Il est essentiel d’utiliser le bon nom, qui est défini dans la configuration du serveur de tuiles.
+- Voir la propriété name du .json du service
+
+![alt text](image-3.png)
+
+Vous pouvez maintenant : 
+#### 5. Ajoutez la méthode **map.onLoad()** dans **app.js** :
+- Pour plus d'information assurez-vous de voir la documentation du code dans app.js
+
+```javascript
+map.on('load', function () {
+    map.addSource('NOM UNIQUE QUE VOUS SOUHAITEZ DONNER À VOTRE SOURCE', {
+        type: 'vector',
+        tiles: ['https://your-server-url/PROPRIÉTÉ IS DE LA SOURCE.JSON/{z}/{x}/{y}.pbf']
+    });
+    map.addLayer({
+        'id': 'IDENTIFIANT UNIQUE DU LAYER QUE VOUS SOUHAITEZ DONNER ',
+        'type': 'fill',
+        'source': 'NOM QUE VOUS AVEZ DONNÉ À VOTRE SOURCE',
+        'source-layer': 'PROPRIÉTÉ IS DE LA SOURCE.JSON'
+    });
+});
+```
+
+Exemple : 
+
+```javascript
+map.on('load', function () {
+    map.addSource('qt_arbres_quartier_source', {
+        type: 'vector',
+        tiles: ['https://special-train-gv4r9g5gj4cvp7-8801.app.github.dev/public.densite_arbres_quartiers/{z}/{x}/{y}.pbf']
+    });
+    map.addLayer({
+        'id': 'qt_arbres_quartier',
+        'type': 'fill',
+        'source': 'qt_arbres_quartier_source',
+        'source-layer': 'public.densite_arbres_quartiers'
+    });
+});
+```
+
+#### 6. Rechargez la carte pour voir les données s'afficher.
+
+Vérification et dépannage
+
+Si les tuiles ne s’affichent pas :
+- Vérifiez que le service de tuiles est bien public et accessible.
+![alt text](images/image-14.png)
+![alt text](images/image-13.png)
+- Assurez-vous que l’URL utilisée est correcte.
+- Ouvrez la console du navigateur (F12 > Console) pour vérifier s’il y a des erreurs.
+- Testez l’URL dans un navigateur pour voir si les tuiles sont bien générées.
+
+![alt text](image-6.png)
+---
+
+### **Étape 5 : Stylisation**
+
+Ajoutez une propriété **paint** pour modifier le rendu :
+! Attention les propriétés du layer sont séparées par des virgules.
+
+```javascript
+'paint': {
+    'fill-color': '#FF0000',
+    'fill-opacity': 0.5
+}
+```
+
+![alt text](image-5.png)
+---
+
+### **Étape 6 : Style avancé**
+
+Appliquez un style basé sur une interpolation linéaire de la propriété `qt_arbres`:
+
+```javascript
+'paint': {
+    'fill-color': [
+        'interpolate',
+        ['linear'],
+        ['get', 'qt_arbres'],
+        0, 'rgb(255, 255, 255)',
+        100, 'rgba(192, 192, 255, 0.64)',
+        1000, 'rgba(46, 46, 255, 0.58)',
+        5000, 'rgba(68, 0, 255, 0.66)',
+        7000, 'rgba(19, 0, 70, 0.66)'
+    ],
+    'fill-opacity': 0.7
+}
+```
+![alt text](image-4.png)
+
+---
+
+### **Étape 7 : Ajout d’une couche WFS**
+
+0. Utilisez FME pour charger les limites d'arrondissements dans votre schéma de bases de données (nommer la table aussi simplement que `arrondissements`)
+
+Ensuite
+
+1. **Rendez le port 9000 (pg_featureserv) public** pour trouver et copier l'URL du service WFS des arrondissements (comme vu en cours)
+
+![alt text](image-7.png)
+
+2. Ajoutez une fonction **loadWFS()** dans **app.js** :
+
+```javascript
+/**
+ * Fonction qui génère une couleur aléatoire en format hexadécimal.
+ * @returns {string} Couleur générée au format hexadécimal.
+ */
+function getRandomColor() {
+    // Définition des caractères hexadécimaux possibles
+    var letters = '0123456789ABCDEF';
+    // Initialisation de la couleur avec le préfixe hexadécimal (#)
+    var color = '#';
+    // Boucle pour générer chaque caractère de la couleur (6 caractères)
+    for (var i = 0; i < 6; i++) {
+        // Sélection aléatoire d'un caractère hexadécimal
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    // Retourne la couleur générée au format hexadécimal
+    return color;
+}
+
+/**
+ * Fonction qui charge une couche WFS depuis pgFeatureServ et l'ajoute à la carte MapLibre.
+ * Cette fonction ajoute une source de données GeoJSON à partir d'une URL pgFeatureServ
+ * et ajoute une couche de remplissage ('fill') à la carte MapLibre en utilisant cette source de données.
+ */
+function loadWFS() {
+    // Ajout de la source de données des arrondissements depuis pgFeatureServ
+    map.addSource('arrondissements-source', {
+        type: 'geojson', // Type de source de données
+        data: 'UNE URL GeoJSON qui fini par .json' // URL pgFeatureServ GeoJSON ! Attention il faut bien inclure la méthode qui fait la requete sans limite d'items de données
+    });
+
+    // Ajout de la couche des arrondissements à la carte MapLibre
+    map.addLayer({
+        'id': 'arrondissements', // Identifiant de la couche
+        'type': 'fill', // Type de géométrie de la couche (remplissage)
+        'source': 'arrondissements-source', // Source des données de la couche
+        'paint': {
+            'fill-outline-color': 'black',
+            'fill-color': getRandomColor(), // Si la condition est vraie, utilisez une couleur aléatoire
+            'fill-opacity': 0.3 // Opacité de remplissage (30%)
+        }
+    });
+}
+```
+exemple de map.addSource pour pg_featureServ
+```
+ map.addSource('arrondissements-source', {
+        type: 'geojson', // Type de source de données
+        data: 'https://special-train-gv4r9g5gj4cvp7-9000.app.github.dev/collections/public.arrondissements/items?limit=5000' // URL pgFeatureServ GeoJSON ! Attention il faut bien inclure la méthode qui fait la requete sans limite d'items de données
+    });
+```
+
+3. **Ajoutez un bouton HTML** pour déclencher la fonction :
+
+```html
+<div class='map-overlay top' >
+    <button type="button" class="btn btn-primary" onclick="loadWFS()">Load WFS Data</button>
+</div>
+```
+
+![alt text](images/image-18.png)
+
+Rechargez la page et cliquez sur le bouton pour afficher la couche WFS.
+
+![alt text](image-8.png)
+
+---
+
+Vous pouvez ajouter cette propriété au layer WFS pour qu'il se loge hierarchiquement en dessous du layer des quartiers.
+
+        'before': 'qt_arbres_quartier' // This ensures that 'arrondissements' is placed beneath 'qt_arbres_quartier'
+
+### **Conclusion**
+
+Vous avez maintenant une configuration fonctionnelle de pg_tileserv et pg_featureserv avec des services VTS et WFS intégrés à une application MapLibreGL. La semaine prochaine, nous aborderons :
+
+- Les filtres dynamiques
+- Le déplacement automatisé
+- Les événements de souris (popup et interactions avancées)
+- La visualisation avancée
 
-
-# Laboratoire
-
-Maintenant que vous avez votre “repo” fonctionnel vous allez pouvoir modifier du code HTML, CSS et JS pour vous familiariser avec l’environnement de développer et la librairie javascript MaplibreGL
-
-
-## Étape 1
-
-Changez les coordonnées de départs de l’application dans le fichier lab9.js qui contient toute les instructions pour interagir avec la libraire.
-
-\[-73.55, 45.55]
-
-Sauvegarder votre fichier
-
-Et lancer votre fichier HTML pour vérifier que la localisation de départ à bien changé
-
-![](https://lh7-us.googleusercontent.com/eGp6GAc_DIXtQ-0o1TxsiEtHkc1b3ha77fLCh0V-gdpW_fYes89nlO0lPZyuy28SXMi6IaJQtEKM7RVmJw4QzexOnREHwsbFDlDhQ_H0olXWgJZHexasTFTgDWown7C0ahiIXPGoaWqd3bAHcf9RKQk)
-
-
-## Étape 2
-
-Ici on va modifier la couleur de base des polygones de garages dans la fonction 
-
-colorPolygons (ligne 96)
-
-![](https://lh7-us.googleusercontent.com/3PQJlDg_4RBawM5GklxaSockZ_CLCW1wA2fvWJ9Mdtpehf2YnokwNuFeSnJtE22Bee7uhzNMQoME2FjbC-z3j_2rRQ3v3GMMtwCkhnjFfvgohtfyYp3DipKiCp53UUug-SOYwYN19OVxat2od6oncIE)
-
-Changer la couleur du geojson de red à #9f40ff
-
-Sauvegarder et vérifier vos changements à l’aide du bouton “Colorier”
-
-![](https://lh7-us.googleusercontent.com/e4t0KQLmZblDXRKomMDbHx1a33DrQ2h9Phwa43tDh9cOXyqHSZcQI4HhFBmWU7dwbo2m1odBCDbgExAByDwdFBo2Qb6LzHj5OGvcoLImbpmKvr-0q4fFyyplJ2cuR2dO5byB5yhrj8aJEvHS8w1Y7X4)
-
-
-## Étape 3
-
-Créer un nouveau fichier dans la racine du projet, ce fichier est un fichier javascript qui nous permettra d’y mettre le code d’une fonctionnalité que nous pourrons ensuite appeler à notre guise lorsque nous voudrons utiliser la fonctionnalité pour colorier de manière aléatoires les polygones de garages
-
-![](https://lh7-us.googleusercontent.com/iGJHZk105AO0rqLCIN3fEzKTFcnOfy-aVgSgh_ECKq8h4w7yFgVoeGqT0dOzSHwic4OqU79_0iWLMXk2JL4YkZQkY2CojkoCiky-jrjjMSgwRcGTDFahtUynDS0Wx9B-n8VFsb_bbeWEHBZxs8Uj1wU)
-
-nom du fichier : randomColor.js
-
-
-## Étape 4
-
-et copier coller ce code dans le fichier javascript vide
-
-_function randomColor() {_
-
-  _// Generate three random values between 0 and 255_
-
-  _var r = Math.floor(Math.random() \* 256);_
-
-  _var g = Math.floor(Math.random() \* 256);_
-
-  _var b = Math.floor(Math.random() \* 256);_
-
-  _// Combine the RGB values into a single hexadecimal color code_
-
-  _var hexColor = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);_
-
-  _// Return the color code_
-
-  _return hexColor;_
-
-_}___
-
-![](https://lh7-us.googleusercontent.com/5iRx16Cus_iltffq4bOVaOWZZOHV2qFYtfNSaOHK1tIW54Cp4o8ihMXTKr9-yg-71zsr2IzF9VoIXdaLjTiMBCOkBEjHZpF62sGeQ9hIW4ZZs9jI1CmcHR_aN-5ZzJybS7-MbJ7K86voNYehqExLLoQ)
-
-
-## Étape 5
-
-Ajouter le fichier randomColors.js dans le fichier lab9.html pour mettre à jour les librairies qui sont chargées par le fichier HTML
-
-Dans le fichier HTML au dessus de lab9.js comme ci dessous
-
-![](https://lh7-us.googleusercontent.com/NJTTm5Std_i4pNoSnIoLq47p5Nsx2z_OLbSnJzZnDdDGT0Q7VPBD3u2Bm3_eewIP-TWZHuyPZUAzw9BubD-Jr8pgeN0A2AwCNtG_3xa7Gg9QHZkF13LNO6UDD3FyYxfkpQRE9yN2CooCJZbG1wft8GQ)
-
- 
-
-
-## Étape 7
-
-- Modifier la fonction colorPolygons() dans le fichier lab9.js pour mettre une couleur aléatoire sur les polygones
-
-- Changez la propriété de couleur en 3eme paramètre “ #9f40ff” pour la fonction qui retourne une couleur aléatoire.
-
-![](https://lh7-us.googleusercontent.com/3nWTdQkNT8Wgjq9o7jAejXcOWP1JDvBv3mKiA-Ylk-Ye7xJ8ViyEBlKN3TLcCAVDA-RpTUNXw2pvQaWYxZqd8-dTUEz3fpl1gDJQSiRaHkGmg8k4IxPMMTJ5Lvi6oNhT1tydFItUfYVmdrhFPyNmhxo)
-
-
-## Étape 8 
-
-- Testez vos changements dans l’application en cliquant plusieurs fois sur le bouton colorier
-
-
-## Étape 9
-
-- Ici nous allons changer la couleur thématique de chaque garage en fonction d’une propriété stockée dans le geojson. Comme cela nous pourrons visualiser rapidement quel garage appartient à quel opérateur
-
-![](https://lh7-us.googleusercontent.com/UlNOplojXiO3usdiS0Jf7n-U3o_IFvBldMnHuAQ9Vcghjz4PfHFtRhgDaDJBpPDy3ItWUQ2epWfewomKb4WiCpkvzeJ_8EDXciJwADGUp4qJ763PnkViqCIlKPT2vNHxS192RnXfdd6f6_ydSwZPsGs)
-
-- propriété à utiliser : operator\_id
-
-Remplacer la fonction randomColor() par l’objet javascript suivant dans la fonction _colorPolygons()_
-
-        _{_
-
-         ___property: 'operator\_id',_
-
-         ___stops: \[_
-
-            _\[2, randomColor()],_
-
-            _\[3, randomColor()],_
-
-            _\[15, randomColor()],_
-
-            _\[20, randomColor()],_
-
-            _\[25, randomColor()],_
-
-            _\[30, randomColor()]_
-
-         ___]_
-
-_}_
-
-
-## Étape 10
-
-Testez vos changements dans le front end en cliquant plusieurs fois sur le bouton **_colorier_**
-
-![](https://lh7-us.googleusercontent.com/S5VcfiZ_2ZPZNV6z96l-YUiRtXWlmvSBBzeLa_FHuyHOMQ-4ZDaoFVbR0staXXO8WQsiIYBDHkNh-1WRVgp25_arEpjXblwu7XisU9keerIfF03t3_hh8mpv6NcgUyb3RQNINhTCsf5udG3BkaxoykY)
-
-
-## Étape 11
-
-- Ajouter une couche d’étiquette
-
-* Au même endroit ou votre fonction ajoute la couche des garages lorsque vous cliquez sur le bouton (hint map.addLayer)
-
-Ajoutez-y le code suivant pour ajouter une couche d’étiquette
-
-Remarquer le id a changé (les id doivent être unique)
-
-Le type de la source a changé
-
-Ce n’est plus la propriété paint que nous utilisons mais la propriété **layout**
-
-On utilise la nomenclature get pour aller chercher les valeurs de operator\_id comme valeur d’étiquette
-
-Dans le paint nous allons “paint” la couleur, la taille du halo
-
-      _map.addLayer({_
-
-            _'id': 'geojson-label',_
-
-           _'type': 'symbol',_
-
-           _'source': 'geojson-source',_
-
-           _'layout': {_
-
-               _'text-field': \['get', 'operator\_id'],_
-
-               _},_
-
-            _"paint": {_
-
-                _"text-color": "#202",_
-
-                _"text-halo-color": "#fff",_
-
-                _"text-halo-width": 2_
-
-            _}_
-
-       _});_
-
-![](https://lh7-us.googleusercontent.com/okBCkWp-Ytv8sHFYn7HX9vDBomo0n1vrGu1qioLD-8ehLyhWTZLZks8Okde0k_yh5Pz68ESKQTibpBgEthp9ZcV-ka4C-1ASCBZ3Z1CinSD1rYCXSEL3WZecRi3h7QkDxpXjzEncv_tvE4g6pftHuTE)
-
-Étape 12
-
-- Dans le panneau “Source Control” regardez vos changements et “stager” les grâce au petit + à côté du nom du fichier
-
-![](https://lh7-us.googleusercontent.com/8p8USuQBGMRhZpR8TLujKyBBifbFKFY88lOY5-lGcBn60mDl0ysJEjUVNInEFmFrR0xrjHXOCt-JTnzqwxK4Cx3oJKsdQ_iFjcImQUiEUcJExgwVBTT2jCcJq4IyOf6mWsKHtPBj2fN-BF1O9bGUKuQ)
-
-Cette étape est juste pour vous montrer les fonctionnalités de source controle pour sauvegarder et modifier votre code dans github on aura l’occasion de retravailler ces concepts.
-
-Good job ! 
