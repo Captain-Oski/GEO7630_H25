@@ -1,0 +1,189 @@
+/* ================================
+   Styles de base pour la page
+   ================================ */
+   html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Conteneur principal : carte + panneau */
+  #mainContainer {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Zone de la carte (occupant la gauche) */
+  #map {
+    flex: 1; /* S'étire pour prendre l'espace libre */
+  }
+  
+  
+  /* Panneau d'information (à droite) */
+  #infoPanel {
+    width: 400px;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  
+  /* En-tête (titre, sous-titre) du panneau */
+  .panel-header {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .panel-header .panel-subtitle {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.2rem 0;
+    font-style: italic;
+  }
+  
+  /* Contenu du panneau */
+  .panel-body {
+    font-size: 0.95rem;
+  }
+  
+  /* Petit style pour explication histogramme */
+  .panel-body .histogram-expl {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.4;
+  }
+  
+  /* Chart.js: petit espace sous le canvas */
+  canvas {
+    margin-bottom: 1rem;
+  }
+  
+  /* Légende choroplèthe (affichée en bas à gauche) */
+  #legendChoropleth {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 13px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    min-width: 160px;
+    z-index: 999;
+  }
+  
+  #legendChoropleth-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  
+  .legend-color-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 1px solid #aaa;
+  }
+  
+ /* Bouton pour afficher/masquer la couche arrondissements */
+#arrondissementBtn button {
+  background-color: white;
+  border: 1px solid #636161;
+  border-radius: 3px;
+  font-size: 18px;
+  box-sizing: border-box;
+  height: 29px;
+  width: 29px;
+  outline: none;
+  cursor: pointer;
+
+  /* Le plus important : on active Flex pour centrer le contenu */
+  display: flex;
+  align-items: center;   /* centre l'icône verticalement */
+  justify-content: center; /* centre l'icône horizontalement */
+  /* On retire la position absolue ici ; c'est le conteneur qui est déjà positionné */
+}
+
+#arrondissementBtn button:hover {
+  background-color: #f0f0f0;
+}
+  
+ 
+  /* Dropdown (choisir une variable) */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .dropbtn {
+    background-color: #fff;
+    color: #333;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 6px;
+    width: 100%;
+    text-align: left;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 240px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+  .dropdown-content a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+  }
+  .dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
+  /* Au survol du dropdown, on affiche les options */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  /* Split.js : barres de séparation */
+  .split {
+    overflow: auto;
+  }
+  .gutter {
+    background-color: #ccc;
+    cursor: col-resize;
+  }
+  .gutter.gutter-horizontal {
+    width: 5px;
+  }
+  
+
+
+  .note-box {
+    background-color: #fefefe;
+    border-left: 4px solid #888;
+    padding: 10px 14px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  
