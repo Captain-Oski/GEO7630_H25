@@ -1,3 +1,9 @@
+// Ici on déclare notre identifiant de codespace personnel 
+// A noter qu'a chaque fois que je démarre UN NOUVEAU codespace l'identifiant change
+// Cet identifiant se situe dans l'URL du codespace
+var codeSpaceID = 'curly-garbanzo-695594x5xq6q25q44'
+
+console.log('TEST')
 var map = new maplibregl.Map({
     container: 'map', 
     style: 'https://api.maptiler.com/maps/dataviz/style.json?key=JhO9AmIPH59xnAn5GiSj',
@@ -61,7 +67,7 @@ map.on('load', function () {
     map.addSource('RANL13299903.Arret_Stationnement-source', {
         type: 'vector',
         tiles: [
-            "https://silver-spoon-5grrgx7x9qxjhpprj-8801.app.github.dev/RANL13299903.Arret_Stationnement/{z}/{x}/{y}.pbf"
+            `https://${codeSpaceID}-8801.app.github.dev/RANL13299903.Arret_Stationnement/{z}/{x}/{y}.pbf`
         ]
     });
 
