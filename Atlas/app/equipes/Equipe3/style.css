@@ -1,0 +1,53 @@
+/* style.css */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent global scrollbar */
+}
+
+.container-fluid {
+    height: 100vh;
+}
+
+
+.sidebar-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    color:#002D62;
+    font-weight: bold;
+}
+
+.sidebar-content > div {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-content > div:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.main-title-container { /* Container du fond bleu */
+    background-color: #002D62;
+    display: flex; /* Active le modèle de boîte flexible */
+    justify-content: center; /* Centre horizontalement le contenu */
+    align-items: center; /* Centre verticalement le contenu */
+    padding-top: 25px; /* Ajoute du rembourrage en haut */
+    padding-bottom: 15px; /* Ajoute du rembourrage en bas */
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.main-title-container h1 { /* Le titre à l'intérieur */
+    font-size: 1.5rem;
+    color: white;
+
+    margin: 0; /* Supprime les marges par défaut du h1 pour un centrage précis */
+    padding: 0; /* Supprime les rembourrages par défaut du h1 */
+}
+
