@@ -1,0 +1,8 @@
+services:
+  tp3:
+    image: nginx
+    ports:
+      - 7000:80
+    volumes:
+      - ./TP3/Atlas/app/equipes/Equipe3:/usr/share/nginx/html:ro
+    restart: always
