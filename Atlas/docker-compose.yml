@@ -35,4 +35,3 @@ services:
     volumes:
       - ./geoserver_data:/opt/geoserver/data_dir
     restart: always
-  
