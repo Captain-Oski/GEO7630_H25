@@ -20,13 +20,34 @@
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
 </head>
 <body>
-    <div class = "main-title-container"><h1>Analyse géospatiale des accidents routier de 2012 à 2023 </h1></div>
+    <div class = "main-title-container"><h1>Analyse géospatiale des accidents routiers de 2012 à 2023 </h1></div>
     <div class="container-fluid">
         <div class="row h-100">
             <div class="col-md-9 p-0">
                
                 <div id="map" style="width: 1150px; height: 660px;"></div>
-                
+                <div class="legend-container">
+                    <div class="legend-title">Gravité</div>
+                    <div class="legend-item" data-gravite="Tous">
+                      <span class="legend-circle" style="--color: grey;"></span> Tous
+                    </div>
+                    <div class="legend-item" data-gravite="Mortel">
+                      <span class="legend-circle" style="--color: purple;"></span> Mortel
+                    </div>
+                    <div class="legend-item" data-gravite="Grave">
+                      <span class="legend-circle" style="--color: blue;"></span> Grave
+                    </div>
+                    <div class="legend-item" data-gravite="Léger">
+                      <span class="legend-circle" style="--color: green;"></span> Léger
+                    </div>
+                    <div class="legend-item" data-gravite="Dommages matériels seulement">
+                      <span class="legend-circle" style="--color: yellow;"></span> Dommages matériels seulement
+                    </div>
+                    <div class="legend-item" data-gravite="Dommages matériels inférieurs au seuil de rapportage">
+                      <span class="legend-circle" style="--color: orange;"></span> Dommages matériels inférieurs
+                    </div>
+                  </div>
+                  
             </div>
             <div class="col-md-3 bg-light p-4">
                 <div class="sidebar-header mb-3">
@@ -57,9 +78,21 @@
 
                     <div id="stats" style="margin-top: 10px; font-family: Arial;">
                         <h4>Nombre d'accidents et des morts par gravité</h4>
-                        <p id="nb_accidents"><strong> Nombre d'accidents </strong>: 0</p>
-                        <p id="nb_morts"><strong>Nombre de morts </strong>: 0</p>
+                        <p id="nb_accidents"><strong>Nombre d'accidents</strong> : 0</p>
+                        <p id="nb_morts"><strong>Nombre de morts</strong> : 0</p>
+                        <p class="texte-compact">
+                            Notre application offre une visualisation des collisions routières survenues à Montréal entre 2012 et 2023, 
+                            en mettant en évidence le nombre d'accidents et de décès enregistrés.
+                          </p>
+                          <p><strong>Veuillez noter que le chargement des données peut prendre environ une minute</strong></p>
+                      
+                          <button id="button_url">
+                            <a href="https://storymaps.arcgis.com/stories/cfd724c3566a4802903577957b940c8f" target="_blank">
+                              Contexte général de la collision
+                            </a>
+                          </button>
                     </div>
+                    
 
                     
                 </div>
@@ -69,8 +102,6 @@
 
     <script src="main.js"></script>
     <script src="control.js"></script>
-
-
 
 </body>
 </html>
