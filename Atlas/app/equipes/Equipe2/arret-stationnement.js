@@ -12,9 +12,16 @@ map.on('load', function () {
         'source-layer': 'RANL13299903.Arret_Stationnement',
 
         'paint': {
-            'circle-radius': 5, // Rayon du cercle
-            'circle-color': 'rgb(10, 67, 80)', // Couleur du cercle
-            'circle-opacity': 1 // Opacité du cercle
+            'circle-radius': 5,
+            'circle-color': [
+                'step',
+                ['get', 'distance'], // <- ici "distance" est le champ dans ta donnée
+                'green',  // si distance <= 100
+                100, 'blue', // si distance > 100 et <= 300
+                300, 'red'   // si distance > 300 et <= 500
+                // tout ce qui est > 500m sera rouge aussi sauf si tu veux ajouter une 4e couleur
+            ],
+            'circle-opacity': 1
         }
     });
 });
