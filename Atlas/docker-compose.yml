@@ -36,7 +36,7 @@ services:
       - ./geoserver_data:/opt/geoserver/data_dir
     restart: always
 
-  tp3:
+  equipe3:
     image: nginx
     ports:
       - 7000:80
