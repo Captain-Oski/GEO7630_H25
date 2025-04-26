@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const scale = new maplibregl.ScaleControl({ unit: 'metric' });
     map.addControl(scale);
 
-    // Référence à la liste déroulante des inondations
+    // Référence à la liste déroulante des collisions
     const inondationdropdown = document.getElementById('inondation-dropdown');
 
     // Active la liste déroulante après 1 seconde
