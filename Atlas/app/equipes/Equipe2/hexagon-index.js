@@ -10,18 +10,21 @@ map.on('load', function () {
         'source': 'RANL13299903.Denssité_hexagon-source',
         'source-layer': 'RANL13299903.Denssité_hexagon',
         'paint': {
-    'fill-color': [
-    'step',
-    ['get', 'densité_stationnement'], 
-    '#ffffcc',    // 0 à 1.6 : Jaune pâle
-    1.6, '#ffeda0', // 1.6 à 9.7 : Jaune moyen
-    9.7, '#feb24c', // 9.7 à 18.7 : Orange clair
-    18.7, '#fd8d3c', // 18.7 à 29.4 : Orange foncé
-    29.4, '#f03b20', // 29.4 à 36.1 : Rouge vif
-    36.1, '#bd0026'  // >36.1 : Rouge très foncé
-],
-'fill-opacity': 0.7,
-'fill-outline-color': 'gray'
-}
+            'fill-color': [
+                'interpolate',
+                ['linear'],
+                ['get', 'densité_stationnement'],
+                0, '#ffffcc',       // Très pâle pour 0
+                0.01, '#ffeda0',    // Dès 0.01
+                0.05, '#fed976',    // Dès 0.05
+                0.1, '#feb24c',     // Dès 0.1
+                0.2, '#fd8d3c',     // Dès 0.2
+                0.5, '#fc4e2a',     // Dès 0.5
+                1, '#e31a1c',       // Dès 1
+                2, '#bd0026'        // Dès 2 et plus
+            ],
+            'fill-opacity': 0.7,
+            'fill-outline-color': 'gray'
+        }
     });
 });
