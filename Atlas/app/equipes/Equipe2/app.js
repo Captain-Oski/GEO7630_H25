@@ -2,7 +2,7 @@ var codeSpaceID = 'curly-garbanzo-695594x5xq6q25q44';
 
 console.log('TEST');
 
-const map = new maplibregl.Map({
+var map = new maplibregl.Map({
     container: 'map',
     style: 'https://api.maptiler.com/maps/dataviz/style.json?key=JhO9AmIPH59xnAn5GiSj',
     center: [-73.55, 45.55],
