@@ -151,21 +151,36 @@ function addLayer(layerId) {
     switch (layerId) {
         case 'Arret_Stationnement':
             map.addLayer({
-                id: 'Arret_Stationnement',
-                type: 'circle',
-                source: 'RANL13299903.Arret_Stationnement-source',
+                'id': 'Arret_Stationnement',
+                'type': 'circle',
+                'source': 'RANL13299903.Arret_Stationnement-source',
                 'source-layer': 'RANL13299903.Arret_Stationnement',
-                paint: {
+                'paint': {
                     'circle-radius': 5,
                     'circle-color': [
                         'step',
-                        ['get', 'distance_m_'], // <- ici "distance" est le champ dans ta donnée
-                        'green',  // si distance <= 100
-                        100, 'blue', // si distance > 100 et <= 300
-                        300, 'red'   // si distance > 300 et <= 500
-                        // tout ce qui est > 500m sera rouge aussi sauf si tu veux ajouter une 4e couleur
+                        ['get', 'distance_m_'],
+                        'green',  // ≤100m
+                        100, 'blue',  // 100–300m
+                        300, 'red'    // >300m
                     ],
-                    'circle-opacity': 1
+                    'circle-opacity': 1,
+            
+                    // 🧠 Nouveau : Couleur du contour
+                    'circle-stroke-color': [
+                        'case',
+                        ['==', ['get', 'type_de_transport__0=bus_2=métro_'], 2], 
+                        'black',     // Si métro ➔ contour noir
+                        'transparent'  // Si bus ➔ pas de contour
+                    ],
+            
+                    // 🧠 Nouveau : Épaisseur du contour
+                    'circle-stroke-width': [
+                        'case',
+                        ['==', ['get', 'type_de_transport__0=bus_2=métro_'], 2],
+                        2,   // Si métro ➔ contour de 2px
+                        0    // Si bus ➔ aucun contour
+                    ]
                 }
             });
             break;
@@ -193,15 +208,25 @@ function addLayer(layerId) {
             break;
         case 'Nbres_de_places_et_heures_de_stationnement':
             map.addLayer({
-                id: 'Nbres_de_places_et_heures_de_stationnement',
-                type: 'circle',
-                source: 'RANL13299903.Nbres_de_places_et_heures_de_stationnement-source',
+                'id': 'Nbres_de_places_et_heures_de_stationnement',
+                'type': 'circle',
+                'source': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement-source',
                 'source-layer': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement',
-                paint: {
-                    'circle-color': "rgb(240, 255, 31)", 
+                'paint': {
+                    // 🎯 Variation dynamique de la couleur en fonction du nombre de places
+                    'circle-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'nbr_pla'],
+                        0, '#ffffcc',    // Très clair (presque jaune) pour 0
+                        10, '#c2e699',   // Vert très clair pour petits parkings
+                        50, '#78c679',   // Vert moyen
+                        100, '#31a354',  // Vert plus foncé
+                        200, '#006837'   // Très foncé pour les très grands parkings
+                    ],
                     'circle-opacity': 1,
-                    
-                    // 🎯 Variation dynamique du rayon en fonction de nbr_pla
+        
+                    // 🎯 Variation dynamique du rayon en fonction du nombre de places
                     'circle-radius': [
                         'interpolate',
                         ['linear'],
@@ -212,30 +237,30 @@ function addLayer(layerId) {
                         100, 15,  // 100 places = cercle de 15px
                         200, 20   // 200 places et + = cercle de 20px
                     ],
-            
+        
                     'circle-translate-anchor': 'map'
                 }
             });
-            // 🎯 Ajouter directement après : les étiquettes (labels)
-    map.addLayer({
-        id: 'Nbres_de_places_et_heures_de_stationnement-label',
-        type: 'symbol',
-        source: 'RANL13299903.Nbres_de_places_et_heures_de_stationnement-source',
-        'source-layer': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement',
-        layout: {
-            'text-field': ['get', 'nbr_pla'],
-            'text-size': 12,
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-offset': [0, 0.6],
-            'text-anchor': 'top'
-        },
-        paint: {
-            'text-color': 'black',
-            'text-halo-color': 'white',
-            'text-halo-width': 1
-        },
         
-    });
+            map.addLayer({
+                'id': 'Nbres_de_places_et_heures_de_stationnement-label',
+                'type': 'symbol',
+                'source': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement-source',
+                'source-layer': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement',
+                'layout': {
+                    'text-field': ['get', 'nbr_pla'],
+                    'text-size': 12,
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-offset': [0, 0.6],
+                    'text-anchor': 'top'
+                },
+                'paint': {
+                    'text-color': 'black',
+                    'text-halo-color': 'white',
+                    'text-halo-width': 1
+                }
+            });
+        
             break;
         case 'Nbre_de_site':
             map.addLayer({
@@ -323,4 +348,72 @@ map.on('click', 'Nbres_de_places_et_heures_de_stationnement', (e) => {
         .addTo(map);
 
     map.flyTo({ center: feature.geometry.coordinates, zoom: 14 });
+});
+
+map.on('click', 'Arret_Stationnement', (e) => {
+    const feature = e.features[0];
+
+    const emplacement = feature.properties.emplacement_stationnement || 'Emplacement non disponible';
+    const nom_arret = feature.properties.nom_arret || 'Nom non disponible';
+    const distance = feature.properties.distance_m_ != null ? feature.properties.distance_m_.toFixed(2) + ' m' : 'Distance inconnue';
+    
+    const type_transport = feature.properties['type_de_transport__0=bus_2=métro_'];
+    
+    // Définir le texte et la couleur selon le type de transport
+    let typeText = 'Type inconnu';
+    let popupColor = 'white'; // couleur par défaut
+
+    if (type_transport === 0) {
+        typeText = 'Arrêt de bus 🚌';
+        popupColor = '#fff8b0'; // jaune pâle
+    } else if (type_transport === 2) {
+        typeText = 'Station de métro 🚇';
+        popupColor = '#b0e0ff'; // bleu clair
+    }
+
+    new maplibregl.Popup({ 
+        closeButton: true,
+        closeOnClick: true,
+    })
+    .setLngLat(feature.geometry.coordinates)
+    .setHTML(`
+        <div class="popup-content" style="
+            background-color: ${popupColor};
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            color: black;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        ">
+            <strong>Emplacement du stationnement :</strong> ${emplacement}<br>
+            <strong>Nom de l'arrêt :</strong> ${nom_arret}<br>
+            <strong>Distance :</strong> ${distance}<br>
+            <strong>Type :</strong> ${typeText}
+        </div>
+    `)
+    .addTo(map);
+
+    map.flyTo({ center: feature.geometry.coordinates, zoom: 14 });
+});
+
+map.on('click', 'Nbre_de_site', (e) => {
+    const feature = e.features[0];
+
+    const nom = feature.properties.nom || 'Nom non disponible';
+    const nbre_sites = feature.properties.nbre_site_stationnement != null ? feature.properties.nbre_site_stationnement : 'Non précisé';
+
+    const coordinates = e.lngLat;
+
+    new maplibregl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(`
+            <div style="background:white; padding:10px; border-radius:6px; box-shadow:0 0 5px rgba(0,0,0,0.3); font-family:'Open Sans', sans-serif; font-size:13px;">
+                <strong>Arrondissement :</strong> ${nom}<br>
+                <strong>Nombre de sites de stationnement :</strong> ${nbre_sites}
+            </div>
+        `)
+        .addTo(map);
+
+    map.flyTo({ center: coordinates, zoom: 12 });
 });

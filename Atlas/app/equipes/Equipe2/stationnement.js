@@ -13,10 +13,20 @@ map.on('load', function () {
         'source': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement-source',
         'source-layer': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement',
         'paint': {
-            'circle-color': "rgb(240, 255, 31)", 
+            // 🎯 Variation dynamique de la couleur en fonction du nombre de places
+            'circle-color': [
+                'interpolate',
+                ['linear'],
+                ['get', 'nbr_pla'],
+                0, '#ffffcc',    // Très clair (presque jaune) pour 0
+                10, '#c2e699',   // Vert très clair pour petits parkings
+                50, '#78c679',   // Vert moyen
+                100, '#31a354',  // Vert plus foncé
+                200, '#006837'   // Très foncé pour les très grands parkings
+            ],
             'circle-opacity': 1,
-            
-            // 🎯 Variation dynamique du rayon en fonction de nbr_pla
+
+            // 🎯 Variation dynamique du rayon en fonction du nombre de places
             'circle-radius': [
                 'interpolate',
                 ['linear'],
@@ -27,17 +37,18 @@ map.on('load', function () {
                 100, 15,  // 100 places = cercle de 15px
                 200, 20   // 200 places et + = cercle de 20px
             ],
-    
+
             'circle-translate-anchor': 'map'
         }
     });
+
     map.addLayer({
         'id': 'Nbres_de_places_et_heures_de_stationnement-label',
         'type': 'symbol',
         'source': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement-source',
         'source-layer': 'RANL13299903.Nbres_de_places_et_heures_de_stationnement',
         'layout': {
-            'text-field': ['get', 'nbr_pla'],       // 🏷️ afficher le nombre de places
+            'text-field': ['get', 'nbr_pla'],
             'text-size': 12,
             'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
             'text-offset': [0, 0.6],
@@ -47,8 +58,7 @@ map.on('load', function () {
             'text-color': 'black',
             'text-halo-color': 'white',
             'text-halo-width': 1
-        },
-        
+        }
     });
 
 });
