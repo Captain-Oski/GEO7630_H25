@@ -61,14 +61,14 @@ map.on('load', function () {
 function setupArretStationnement() {
     map.addSource('RANL13299903.Arret_Stationnement-source', {
         type: 'vector',
-        tiles: [`https://${codeSpaceID}-8801.app.github.dev/RANL13299903.Arret_Stationnement/{z}/{x}/{y}.pbf`]
+        tiles: [`https://curly-garbanzo-695594x5xq6q25q44-8801.app.github.dev/RANL13299903.Arret_Stationnement/{z}/{x}/{y}.pbf`]
     });
 }
 
 function setupDensiteHexagon() {
     map.addSource('RANL13299903.Denssité_hexagon-source', {
         type: 'vector',
-        tiles: [`https://${codeSpaceID}-8801.app.github.dev/RANL13299903.Densséité_hexagon/{z}/{x}/{y}.pbf`]
+        tiles: [`https://${codeSpaceID}-8801.app.github.dev/RANL13299903.Denssité_hexagon/{z}/{x}/{y}.pbf`]
     });
 }
 
