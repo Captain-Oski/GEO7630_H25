@@ -15,7 +15,7 @@ map.on('load', function () {
             'circle-radius': 5,
             'circle-color': [
                 'step',
-                ['get', 'distance'], // <- ici "distance" est le champ dans ta donnée
+                ['get', 'distance_m_'], // <- ici "distance" est le champ dans ta donnée
                 'green',  // si distance <= 100
                 100, 'blue', // si distance > 100 et <= 300
                 300, 'red'   // si distance > 300 et <= 500
