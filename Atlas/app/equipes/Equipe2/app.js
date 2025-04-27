@@ -208,8 +208,39 @@ function addLayer(layerId) {
                     'fill-outline-color': 'gray'
                 }
             });
+// Néanmoins, pour cette couche, je n'arrive à graduer ses couleurs, je pense que c'est une erreur par rapport à son traitement sur FME
+map.addLayer({
+    'id': 'Denssité_hexagon-3d',
+    'type': 'fill-extrusion',
+    'source': 'RANL13299903.Denssité_hexagon-source',
+    'source-layer': 'RANL13299903.Denssité_hexagon',
+    'paint': {
+        'fill-extrusion-color': [
+            'interpolate',
+            ['linear'],
+            ['get', 'densité_stationnement'],
+            0, '#ffffcc',
+            5, '#c2e699',
+            10, '#78c679',
+            20, '#31a354',
+            30, '#006837'
+        ],
+        'fill-extrusion-height': [
+            'interpolate',
+            ['linear'],
+            ['get', 'densité_stationnement'],
+            0, 0,
+            5, 500,
+            10, 1000,
+            20, 2000,
+            30, 3000
+        ],
+        'fill-extrusion-base': 0,
+        'fill-extrusion-opacity': 0.7
+    }
+});
 
-            break;
+        break;
         case 'Nbres_de_places_et_heures_de_stationnement':
             map.addLayer({
                 'id': 'Nbres_de_places_et_heures_de_stationnement',
@@ -289,6 +320,42 @@ function addLayer(layerId) {
                     'fill-outline-color': 'black'
                 }
             });
+
+            map.addLayer({
+                'id': 'Nbre_de_site-3d',
+                'type': 'fill-extrusion',
+                'source': 'RANL13299903.Nbre_de_site-source',
+                'source-layer': 'RANL13299903.Nbre_de_site',
+                'paint': {
+                    'fill-extrusion-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'nbre_site_stationnement'],
+                        0, '#f7fbff',    // Blanc bleuté
+                        1, '#deebf7',    // Bleu très clair
+                        3, '#c6dbef',    // Bleu clair
+                        5, '#9ecae1',    // Bleu moyen
+                        10, '#6baed6',   // Bleu plus foncé
+                        20, '#3182bd',   // Bleu foncé
+                        30, '#08519c'    // Bleu très foncé
+                    ],
+                    'fill-extrusion-height': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'nbre_site_stationnement'],
+                        0, 0,
+                        1, 100,
+                        3, 500,
+                        5, 1000,
+                        10, 2000,
+                        20, 3000,
+                        30, 4000
+                    ],
+                    'fill-extrusion-base': 0,
+                    'fill-extrusion-opacity': 0.8
+                }
+            });
+            
             map.addLayer({
                 'id': 'Nbre_de_site-label',
                 'type': 'symbol',
@@ -314,7 +381,7 @@ function addLayer(layerId) {
     }
 }
 
-// Lier les boutons aux actions
+// Lier les boutons aux actions, à usage unique pour l'instant car je n'ai pas encore trouver la solution pour que ca soit réutilisable 
 
 document.getElementById('toggleArretStationnement').addEventListener('click', function () {
     toggleLayer('Arret_Stationnement', setupArretStationnement);
@@ -332,7 +399,7 @@ document.getElementById('toggleNbreDeSite').addEventListener('click', function (
     toggleLayer('Nbre_de_site', setupNbreDeSite);
 });
 
-
+// Affichage par clic permettant d'avoir des informations sur les heures, l'emplacement des stationnements
 map.on('click', 'Nbres_de_places_et_heures_de_stationnement', (e) => {
     const feature = e.features[0];
 
@@ -401,6 +468,7 @@ map.on('click', 'Arret_Stationnement', (e) => {
     map.flyTo({ center: feature.geometry.coordinates, zoom: 14 });
 });
 
+// Affichage par clic des popup pour connaitre l'arrondissement en question
 map.on('click', 'Nbre_de_site', (e) => {
     const feature = e.features[0];
 
@@ -420,4 +488,109 @@ map.on('click', 'Nbre_de_site', (e) => {
         .addTo(map);
 
     map.flyTo({ center: coordinates, zoom: 12 });
+});
+// Fonction turf.js pour créer des buffers de 100m autour des stationnements
+async function createBufferAroundArretStationnement() {
+    console.log('Création du buffer autour des arrêts...');
+
+    // 1. Récupérer toutes les features visibles de la couche
+    const features = map.querySourceFeatures('RANL13299903.Arret_Stationnement-source', {
+        sourceLayer: 'RANL13299903.Arret_Stationnement'
+    });
+
+    if (!features.length) {
+        console.error('Aucun arrêt de stationnement trouvé.');
+        return;
+    }
+
+    // 2. Construire un FeatureCollection GeoJSON
+    const pointsGeojson = {
+        type: "FeatureCollection",
+        features: features.map(f => ({
+            type: "Feature",
+            geometry: f.geometry,
+            properties: {}
+        }))
+    };
+
+    // 3. Appliquer un buffer autour de chaque point avec Turf.js
+    const buffered = turf.buffer(pointsGeojson, 100, { units: 'meters' }); // ex : 100 mètres autour
+
+    // 4. Ajouter une nouvelle source et une couche pour le buffer
+    if (map.getSource('buffer-arret-source')) {
+        map.removeLayer('buffer-arret-layer');
+        map.removeSource('buffer-arret-source');
+    }
+
+    map.addSource('buffer-arret-source', {
+        type: 'geojson',
+        data: buffered
+    });
+
+    map.addLayer({
+        'id': 'buffer-arret-layer',
+        'type': 'fill',
+        'source': 'buffer-arret-source',
+        'paint': {
+            'fill-color': '#00FFFF',
+            'fill-opacity': 0.3,
+            'fill-outline-color': '#0077FF'
+        }
+    });
+
+    console.log('Buffer ajouté sur la carte.');
+}
+
+document.getElementById('createBuffer').addEventListener('click', createBufferAroundArretStationnement);
+
+
+// Bouton pour activer/désactiver les couches 2.5D
+let is3DEnabled = false; // état initial
+
+document.getElementById('toggle3D').addEventListener('click', function () {
+    is3DEnabled = !is3DEnabled; // inverser l'état
+
+    if (is3DEnabled) {
+        // Si on active le 2.5D ➔ afficher les couches extrusion
+        if (!map.getLayer('Nbre_de_site-3d')) {
+            map.addLayer({
+                'id': 'Nbre_de_site-3d',
+                'type': 'fill-extrusion',
+                'source': 'RANL13299903.Nbre_de_site-source',
+                'source-layer': 'RANL13299903.Nbre_de_site',
+                'paint': {
+                    'fill-extrusion-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'nbre_site_stationnement'],
+                        0, '#f7fbff',
+                        1, '#deebf7',
+                        3, '#c6dbef',
+                        5, '#9ecae1',
+                        10, '#6baed6',
+                        20, '#3182bd',
+                        30, '#08519c'
+                    ],
+                    'fill-extrusion-height': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'nbre_site_stationnement'],
+                        0, 0,
+                        1, 100,
+                        3, 500,
+                        5, 1000,
+                        10, 2000,
+                        20, 3000,
+                        30, 4000
+                    ],
+                    'fill-extrusion-opacity': 0.8
+                }
+            });
+        }
+    } else {
+        // Sinon ➔ enlever la couche 3D
+        if (map.getLayer('Nbre_de_site-3d')) {
+            map.removeLayer('Nbre_de_site-3d');
+        }
+    }
 });
