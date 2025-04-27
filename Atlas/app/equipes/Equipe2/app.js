@@ -59,18 +59,24 @@ map.on('load', function () {
 
 function updateLegend(layerId) {
     const legend = document.getElementById('legend');
-    legend.innerHTML = ''; // Vider l'ancienne légende
+    legend.innerHTML = '';
+
+    if (!layerId) {
+        legend.innerHTML = 'Sélectionnez une couche pour voir la légende.';
+        return;
+    }
 
     switch (layerId) {
         case 'Arret_Stationnement':
             legend.innerHTML = `
-                <strong>Distance de stationnement</strong><br>
+                <strong>Distance des arrets par rapport à un stationnement</strong><br>
                 <span style="background:green;width:10px;height:10px;display:inline-block;"></span> ≤ 100m<br>
                 <span style="background:blue;width:10px;height:10px;display:inline-block;"></span> 100-300m<br>
                 <span style="background:red;width:10px;height:10px;display:inline-block;"></span> > 300m<br>
             `;
             break;
         case 'Denssité_hexagon':
+        case 'Denssité_hexagon-3d':
             legend.innerHTML = `
                 <strong>Densité de stationnements</strong><br>
                 <span style="background:#ffffcc;width:10px;height:10px;display:inline-block;"></span> 0-1.6<br>
@@ -84,10 +90,11 @@ function updateLegend(layerId) {
         case 'Nbres_de_places_et_heures_de_stationnement':
             legend.innerHTML = `
                 <strong>Nombre de places</strong><br>
-                <span style="background:rgb(240, 255, 31);width:10px;height:10px;display:inline-block;"></span> Symboles proportionnels au nombre de places<br>
+                <span style="background:rgb(240,255,31);width:10px;height:10px;display:inline-block;"></span> Symboles proportionnels au nombre de places<br>
             `;
             break;
         case 'Nbre_de_site':
+        case 'Nbre_de_site-3d':
             legend.innerHTML = `
                 <strong>Nombre de sites</strong><br>
                 <span style="background:#f7fbff;width:10px;height:10px;display:inline-block;"></span> 0<br>
@@ -138,11 +145,13 @@ function toggleLayer(layerId, setupSourceFn) {
     if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
         console.log('Layer retiré:', layerId);
+        updateLegend(null); // ➔ Reset la légende
     } else {
         if (!map.getSource(layerId + '-source')) {
             setupSourceFn();
         }
         addLayer(layerId);
+        updateLegend(layerId); // ➔ Met à jour la légende automatiquement
     }
 }
 
@@ -544,7 +553,7 @@ async function createBufferAroundArretStationnement() {
 document.getElementById('createBuffer').addEventListener('click', createBufferAroundArretStationnement);
 
 
-// Bouton pour activer/désactiver les couches 2.5D
+// Bouton pour activer/désactiver les couches 2.5D de la couche nombres de sites/arrondissements
 let is3DEnabled = false; // état initial
 
 document.getElementById('toggle3D').addEventListener('click', function () {
