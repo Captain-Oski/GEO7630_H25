@@ -306,6 +306,8 @@ Exemple d’entête
 
 ![](https://lh7-us.googleusercontent.com/xyuv6VL4xs6ayBQxvLPRbKHeRXvgS_rsjyKOk5w-U5dOgp_XBP3svvS0WpUCCmmYYftsZYhDdCGxMg0_J8yy2tvbPGCatf_kQeqLdsE53mVgdgLGfuGfKMELhyFnHEwmaqSxNPXXoBuZmpGzme_9l80)
 
+Ne pas oublier de changer la propriétés des données d'entrées à Sommes de la propriété datapoint.START_SUM... et même chose pour les données de références (switch button en bas des données) avec la somme de la propriété reference.END_SUM
+
 ****
 
 1. Ajouter TOPTEXT : 
