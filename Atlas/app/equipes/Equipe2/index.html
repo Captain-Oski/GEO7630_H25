@@ -108,7 +108,7 @@
 </svg>
 
 <body>
-
+  
   <main>
     <h1 class="visually-hidden">GEO7630H24 Atlas Urbain Interactif</h1>
 
@@ -142,7 +142,7 @@
             <svg class="bi me-2" width="16" height="16">
               <use xlink:href="#people-circle" />
             </svg>
-            Équipe 2 : Titre
+            Équipe 2 : Stationnements
           </a>
         </li>
         <li>
@@ -196,6 +196,9 @@
       <div class="row" style="padding: 10px; height: 100%;">
         <div class="col-12" style="height: 100%;">
           <h5 class="card-title text-white">Équipe 2</h5>
+          <h4 class="card-title text-white" style="font-size:14px;">
+            Application cartographique permettant de visualiser les stationnements dans les arrondissements de Montréal durant les périodes de déneigements, avec les informations sur chaque stationnements (Emplacements, les heures de restrictions, les distances aux arrêts STM, les nombres de sites de stationnements par arrondissement)
+          </h4>
         </div>
       </div>
     </div>
@@ -203,13 +206,33 @@
     <div id="rightMenu" class="container-fluid bg-dark">
       <div class="row" style="padding: 10px; height: 100%;">
         <div class="col" style="height: 100%;">
-          <h5 class="card-title text-white">Titre</h5>
-        </div>
       </div>
     </div>
 
     <div id="Equipe1"></div>
     <div id="Equipe2"></div>
+    <div class="d-flex flex-column bg-white p-3 shadow-sm" style="width: 260px; position: absolute; top: 10px; right: 10px; border-radius: 10px; z-index: 10;">
+  
+      <button id="toggleArretStationnement" class="btn btn-primary mb-2" style="background-color: #007bff; border: none;">Arrêts STM</button>
+      
+      <button id="toggleDensiteHexagon" class="btn btn-primary mb-2" style="background-color: #007bff; border: none;">Densité Hexagonale</button>
+      
+      <button id="togglePlacesStationnement" class="btn btn-primary mb-2" style="background-color: #007bff; border: none;">Places & Heures</button>
+      
+      <button id="toggleNbreDeSite" class="btn btn-primary mb-2" style="background-color: #007bff; border: none;">Nombre de Sites</button>
+      
+      <button id="toggle3D" class="btn btn-secondary mb-2" style="background-color: gray; border: none;">2D/2.5D Arrondissements</button>
+      
+      <button id="createBuffer" class="btn btn-warning mb-3" style="border: none;">Créer Buffer</button>
+
+      <button id="resetMap" class="btn btn-warning mb-3" style="border: none;">resetMap</button>
+    
+      <hr>
+    
+      <div id="legend" style="font-size: 13px; text-align: center; color: #333;">
+        Sélectionnez une couche pour voir la légende.
+      </div>
+    </div>
     <div id="Equipe3"></div>
     <div id="Equipe4"></div>
     <div id="Equipe5"></div>
@@ -224,6 +247,7 @@ integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cD
 crossorigin="anonymous"></script>
 
 <div id="map"></div>
+<div id="legend" style="background:white; padding:10px; border-radius:8px; margin-top:10px; font-family:'Open Sans', sans-serif; font-size:12px; box-shadow:0 2px 5px rgba(0,0,0,0.2);"></div>
 
 <!-- Bootstrap core JavaScript -->
 <!-- ================================================== -->
@@ -238,6 +262,12 @@ crossorigin="anonymous"></script>
 <!-- ================================================== -->
 
 <!-- ================================================== -->
-<script type='text/javascript' src="../app.js"></script>
-<!-- ================================================== -->
+<script src="layer-handler.js"></script>
+<script src="arret-stationnement.js"></script>
+<script src="hexagon-index.js"></script>
+<script src="stationnement.js"></script>
+<script src="nombre-de-site.js"></script>
+<script src="app.js"></script>
+
+<!-- ================================================== -->
 </html>

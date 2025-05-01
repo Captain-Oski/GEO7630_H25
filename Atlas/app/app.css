@@ -6,9 +6,9 @@ body {
 #map {
     position:absolute;
     right:23%;
-    /* top:0; */
+    top:0;
     bottom:20%;
-    height: 100vh;  
+    height: 80vh;  
     width: 65%;
 }
 

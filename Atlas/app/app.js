@@ -33,3 +33,42 @@ function loadTeam(teamName) {
         });
 
     }
+
+
+map.addControl(new maplibregl.NavigationControl({
+    showCompass: true,
+    showZoom: true,
+    visualizePitch: true
+}), 'top-right');
+map.addControl(new maplibregl.GeolocateControl({
+    positionOptions: {
+        enableHighAccuracy: true
+    },
+    trackUserLocation: true,
+    showUserHeading: true
+}), 'bottom-right');
+map.addControl(new maplibregl.ScaleControl({
+    maxWidth: 200,
+    unit: 'metric'
+}), 'bottom-left');
+
+map.on('load', function () {
+ 
+    map.addSource('RANL13299903.Arret_Stationnement-source', {
+        'type': 'vector',
+        'tiles': [ "https://silver-spoon-5grrgx7x9qxjhpprj-8801.app.github.dev/RANL13299903.Arret_Stationnement/{z}/{x}/{y}.pbf"]
+
+    });
+    map.addLayer({
+        'id': 'Arret_Stationnement',
+        'type': 'circle',
+        'source': 'RANL13299903.Arret_Stationnement-source',
+        'source-layer': 'RANL13299903.Arret_Stationnement',
+
+        'paint': {
+            'circle-radius': 5, // Rayon du cercle
+            'circle-color': 'rgb(10, 67, 80)', // Couleur du cercle
+            'circle-opacity': 1 // Opacité du cercle
+        }
+    });
+});
