@@ -22,6 +22,7 @@ services:
     volumes:
       - ./app:/usr/share/nginx/html
     restart: always
+
   geoserver:
     image: kartoza/geoserver:2.22.2
     ports:
@@ -34,12 +35,4 @@ services:
       - PROXY_BASE_URL=https://special-train-gv4r9g5gj4cvp7-8080.app.github.dev/geoserver
     volumes:
       - ./geoserver_data:/opt/geoserver/data_dir
-    restart: always
-
-  equipe3:
-    image: nginx
-    ports:
-      - 7000:80
-    volumes:
-      - ./app/equipes/Equipe3/app:/usr/share/nginx/html:ro
     restart: always
